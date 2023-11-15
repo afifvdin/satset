@@ -3,14 +3,15 @@
 import axios from "axios"
 import Image from "next/image"
 import React, { useState } from "react"
+import toast from "react-hot-toast"
 
 type FileType = {
   url: string
   file: File
-  isSuspicious: boolean
+  isStego: boolean
 }
 
-type mode =
+type ModeType =
   | "google_net"
   | "mobile_net"
   | "qx_net"
@@ -21,7 +22,13 @@ export default function Action() {
   const [files, setFiles] = useState<FileType[]>([])
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [isProcess, setIsProcess] = useState<boolean>(false)
-  const [mode, setMode] = useState<mode>("google_net")
+  const [isDetected, setIsDetected] = useState<boolean>(false)
+  const [mode, setMode] = useState<ModeType>("google_net")
+
+  const doChangeMode = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (isProcess) return
+    setMode(e.currentTarget.value as ModeType)
+  }
 
   const doPickFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isProcess) return
@@ -34,7 +41,7 @@ export default function Action() {
           continue
         }
         const url = URL.createObjectURL(file)
-        res.push({ file: file, url: url, isSuspicious: false })
+        res.push({ file: file, url: url, isStego: false })
       }
       setFiles(res)
     }
@@ -59,17 +66,29 @@ export default function Action() {
 
   const doDetect = async () => {
     if (isProcess) return
+    const loading = toast.loading("Memproses")
+    setIsDetected(false)
     setIsProcess(true)
     try {
-      const formData = new FormData()
-      formData.append("mode", mode)
+      const form = new FormData()
+      form.append("mode", mode)
       files.map((file, i) => {
-        formData.append("files", file.file)
+        form.append("images", file.file)
       })
-      const { data } = await axios.post(process.env.BASE_API!, formData)
-      console.log(data)
+      const { data } = await axios.post(process.env.BASE_API!, form)
+      setFiles(
+        files.map((file, i) => {
+          file.isStego = data["labels"][i] == "Steganography"
+          return file
+        })
+      )
+      setIsProcess(false)
+      setIsDetected(true)
+      toast.success("Selesai", { id: loading })
     } catch (error) {
-      console.log("Error")
+      setIsProcess(false)
+      setIsDetected(true)
+      toast.error("Gagal", { id: loading })
     }
   }
 
@@ -86,7 +105,7 @@ export default function Action() {
       {files.length == 0 ? (
         <div className="flex items-center justify-center h-[36rem]">
           <label
-            htmlFor="files"
+            htmlFor={isProcess ? "" : "files"}
             className="cursor-pointer border-2 border-black px-4 xl:px-6 hover:px-8 py-1.5 xl:py-3 transition-all"
           >
             CHOOSE MY FILES
@@ -95,7 +114,23 @@ export default function Action() {
       ) : (
         <div className="px-2 xl:px-8">
           <div className="flex-grow flex flex-col h-[36rem]">
-            <p className="py-2 xl:py-4">YOUR FILES ({files.length})</p>
+            <div className="flex flex-wrap gap-4 items-center justify-between mb-2">
+              <p>YOUR FILES ({files.length})</p>
+              <div className="flex items-center justify-end gap-4">
+                <p>MODEL</p>
+                <select
+                  value={mode}
+                  onChange={doChangeMode}
+                  className="!outline-none !bg-white !rounded-none cursor-pointer border-2 border-black px-3 py-1.5 transition-all"
+                >
+                  <option value="google_net">GoogleNet (Recommended)</option>
+                  <option value="mobile_net">MobileNet</option>
+                  <option value="qx_net">QxNet</option>
+                  <option value="xception_net">XceptionNet</option>
+                  <option value="yedroudj_net">YedroudjNet</option>
+                </select>
+              </div>
+            </div>
             <div className="flex-grow overflow-y-auto w-full p-2 xl:p-4 flex flex-wrap gap-2 xl:gap-4 border-2 border-black">
               {files.map((file, i) => {
                 return (
@@ -103,12 +138,7 @@ export default function Action() {
                     key={i}
                     data-value={i.toString()}
                     onClick={doSelectFileId}
-                    className={
-                      (i == selectedFileId
-                        ? "border-black"
-                        : "border-transparent") +
-                      " border-2 relative cursor-pointer h-48 w-48"
-                    }
+                    className="relative cursor-pointer h-48 w-48"
                   >
                     <Image
                       src={file.url}
@@ -119,12 +149,24 @@ export default function Action() {
                     />
                     <div
                       className={
-                        (i == selectedFileId
+                        (isDetected
+                          ? selectedFileId == i
+                            ? "bg-opacity-75"
+                            : "bg-opacity-50"
+                          : selectedFileId == i
                           ? "bg-opacity-50"
                           : "bg-opacity-0") +
-                        " absolute top-0 left-0 w-full h-full bg-blue-100"
+                        " absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black"
                       }
-                    />
+                    >
+                      <p className="-rotate-45 text-white text-lg">
+                        {isDetected
+                          ? file.isStego
+                            ? "Steganography"
+                            : "Normal"
+                          : ""}
+                      </p>
+                    </div>
                   </div>
                 )
               })}

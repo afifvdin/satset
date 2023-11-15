@@ -11,7 +11,7 @@ const nextConfig = {
   },
   env: {
     BASE_API:
-      "https://asia-southeast2-tim-riset-bu-rima.cloudfunctions.net/tsdn",
+      "https://asia-southeast1-tim-riset-bu-rima.cloudfunctions.net/satset",
   },
 }
 

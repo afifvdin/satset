@@ -1,10 +1,12 @@
 import Action from "@/components/Action"
 import Card from "@/components/Card"
 import Typing from "@/components/Typing"
+import { Toaster } from "react-hot-toast"
 
 export default function Home() {
   return (
     <div className="overflow-hidden bg-white">
+      <Toaster />
       <div className="bg-blue-200 flex flex-col justify-between xl:grid grid-cols-2 xl:gap-16 p-4 lg:p-16 min-h-screen">
         <div className="flex flex-col justify-center xl:border-r-2 border-black p-4">
           <p className="text-8xl sm:text-9xl tracking-tighter">SATSET</p>
@@ -43,8 +45,9 @@ export default function Home() {
         </div>
         <div className="flex flex-col justify-center p-4">
           <p className="max-w-md">
-            SATSET is an app to detect any hidden information in image pixels.
-            Built for TSDN by Ravin and Afif. Scroll down to see more in action
+            SATSET is an app designed to detect hidden information in image
+            pixels. It was built for TSDN by Ravin and Afif. Scroll down to see
+            it in action.
           </p>
         </div>
       </div>

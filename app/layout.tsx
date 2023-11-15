@@ -5,8 +5,8 @@ import "./globals.css"
 const space = Space_Grotesk({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Sat-Set (Steganographic Android Tool Set)",
-  description: "Sat-Set (Steganographic Android Tool Set)",
+  title: "Sat-Set (Steganographic Artificial Tool Set)",
+  description: "Sat-Set (Steganographic Artificial Tool Set)",
 }
 
 export default function RootLayout({
