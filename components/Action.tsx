@@ -1,5 +1,6 @@
 "use client"
 
+import axios from "axios"
 import Image from "next/image"
 import React, { useState } from "react"
 
@@ -9,10 +10,18 @@ type FileType = {
   isSuspicious: boolean
 }
 
+type mode =
+  | "google_net"
+  | "mobile_net"
+  | "qx_net"
+  | "xception_net"
+  | "yedroudj_net"
+
 export default function Action() {
   const [files, setFiles] = useState<FileType[]>([])
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [isProcess, setIsProcess] = useState<boolean>(false)
+  const [mode, setMode] = useState<mode>("google_net")
 
   const doPickFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isProcess) return
@@ -48,9 +57,20 @@ export default function Action() {
     setFiles([])
   }
 
-  const doDetect = () => {
+  const doDetect = async () => {
     if (isProcess) return
     setIsProcess(true)
+    try {
+      const formData = new FormData()
+      formData.append("mode", mode)
+      files.map((file, i) => {
+        formData.append("files", file.file)
+      })
+      const { data } = await axios.post(process.env.BASE_API!, formData)
+      console.log(data)
+    } catch (error) {
+      console.log("Error")
+    }
   }
 
   return (
@@ -74,50 +94,40 @@ export default function Action() {
         </div>
       ) : (
         <div className="px-2 xl:px-8">
-          <div className="xl:flex justify-between xl:gap-8 xl:h-[36rem]">
-            <div className="flex-grow flex flex-col h-[36rem] xl:h-auto">
-              <p className="py-2 xl:py-4">YOUR FILES ({files.length})</p>
-              <div className="flex-grow overflow-y-auto w-full p-2 xl:p-4 flex flex-wrap gap-2 xl:gap-4 border-2 border-black">
-                {files.map((file, i) => {
-                  return (
+          <div className="flex-grow flex flex-col h-[36rem]">
+            <p className="py-2 xl:py-4">YOUR FILES ({files.length})</p>
+            <div className="flex-grow overflow-y-auto w-full p-2 xl:p-4 flex flex-wrap gap-2 xl:gap-4 border-2 border-black">
+              {files.map((file, i) => {
+                return (
+                  <div
+                    key={i}
+                    data-value={i.toString()}
+                    onClick={doSelectFileId}
+                    className={
+                      (i == selectedFileId
+                        ? "border-black"
+                        : "border-transparent") +
+                      " border-2 relative cursor-pointer h-48 w-48"
+                    }
+                  >
+                    <Image
+                      src={file.url}
+                      alt=""
+                      fill
+                      sizes="auto"
+                      className="bg-cover object-cover"
+                    />
                     <div
-                      key={i}
-                      data-value={i.toString()}
-                      onClick={doSelectFileId}
                       className={
                         (i == selectedFileId
-                          ? "border-black"
-                          : "border-transparent") +
-                        " border-2 relative cursor-pointer h-48 w-48"
+                          ? "bg-opacity-50"
+                          : "bg-opacity-0") +
+                        " absolute top-0 left-0 w-full h-full bg-blue-100"
                       }
-                    >
-                      <Image
-                        src={file.url}
-                        alt=""
-                        fill
-                        sizes="auto"
-                        className="bg-cover object-cover"
-                      />
-                      <div
-                        className={
-                          (i == selectedFileId
-                            ? "bg-opacity-50"
-                            : "bg-opacity-0") +
-                          " absolute top-0 left-0 w-full h-full bg-blue-100"
-                        }
-                      />
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <p className="py-2 xl:py-4">MESSAGE</p>
-              <textarea
-                value={""}
-                placeholder="Type your message"
-                className="w-full xl:w-96 flex-grow border-2 border-black p-2 xl:p-4"
-              />
+                    />
+                  </div>
+                )
+              })}
             </div>
           </div>
           <br />
