@@ -43,8 +43,8 @@ export default function Home() {
         </div>
         <div className="flex flex-col justify-center p-4">
           <p className="max-w-md">
-            SATSET is an app built for TSDN by Ravin and Afif. Scroll down to
-            see more in action
+            SATSET is an app to detect any hidden information in image pixels.
+            Built for TSDN by Ravin and Afif. Scroll down to see more in action
           </p>
         </div>
       </div>
