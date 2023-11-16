@@ -66,7 +66,7 @@ export default function Action() {
 
   const doDetect = async () => {
     if (isProcess) return
-    const loading = toast.loading("Memproses")
+    const loading = toast.loading("Working on it..")
     setIsDetected(false)
     setIsProcess(true)
     try {
@@ -84,11 +84,11 @@ export default function Action() {
       )
       setIsProcess(false)
       setIsDetected(true)
-      toast.success("Selesai", { id: loading })
+      toast.success("Completed", { id: loading })
     } catch (error) {
       setIsProcess(false)
       setIsDetected(true)
-      toast.error("Gagal", { id: loading })
+      toast.error("Please try again", { id: loading })
     }
   }
 
