@@ -87,7 +87,6 @@ export default function Action() {
       toast.success("Completed", { id: loading })
     } catch (error) {
       setIsProcess(false)
-      setIsDetected(true)
       toast.error("Please try again", { id: loading })
     }
   }
