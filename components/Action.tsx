@@ -13,7 +13,7 @@ type FileType = {
 
 type ModeType =
   | "google_net"
-  | "mobile_net"
+  | "mobile_net_v2"
   | "qx_net"
   | "xception_net"
   | "yedroudj_net"
@@ -124,7 +124,7 @@ export default function Action() {
                   className="!outline-none !bg-white !rounded-none cursor-pointer border-2 border-black px-3 py-1.5 transition-all"
                 >
                   <option value="google_net">GoogleNet (Recommended)</option>
-                  <option value="mobile_net">MobileNet</option>
+                  <option value="mobile_net_v2">MobileNetV2</option>
                   <option value="qx_net">QxNet</option>
                   <option value="xception_net">XceptionNet</option>
                   <option value="yedroudj_net">YedroudjNet</option>
