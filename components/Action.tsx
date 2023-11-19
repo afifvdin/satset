@@ -12,9 +12,9 @@ type FileType = {
 }
 
 type ModeType =
+  | "qx_net"
   | "google_net"
   | "mobile_net_v2"
-  | "qx_net"
   | "xception_net"
   | "yedroudj_net"
 
@@ -23,7 +23,7 @@ export default function Action() {
   const [selectedFileId, setSelectedFileId] = useState<number | null>(null)
   const [isProcess, setIsProcess] = useState<boolean>(false)
   const [isDetected, setIsDetected] = useState<boolean>(false)
-  const [mode, setMode] = useState<ModeType>("google_net")
+  const [mode, setMode] = useState<ModeType>("qx_net")
 
   const doChangeMode = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (isProcess) return
@@ -122,9 +122,9 @@ export default function Action() {
                   onChange={doChangeMode}
                   className="!outline-none !bg-white !rounded-none cursor-pointer border-2 border-black px-3 py-1.5 transition-all"
                 >
-                  <option value="google_net">GoogleNet (Recommended)</option>
+                  <option value="qx_net">QxNet (Recommended)</option>
+                  <option value="google_net">GoogleNet</option>
                   <option value="mobile_net_v2">MobileNetV2</option>
-                  <option value="qx_net">QxNet</option>
                   <option value="xception_net">XceptionNet</option>
                   <option value="yedroudj_net">YedroudjNet</option>
                 </select>
