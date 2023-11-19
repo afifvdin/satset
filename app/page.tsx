@@ -1,3 +1,4 @@
+import Link from "next/link"
 import Action from "@/components/Action"
 import Card from "@/components/Card"
 import Typing from "@/components/Typing"
@@ -18,9 +19,9 @@ export default function Home() {
           <p className="text-2xl sm:text-4xl tracking-tighter">
             &ldquo;IT&lsquo;S JUST PLAIN IMAGE&rdquo; - THEY SAID
           </p>
-          <button className="sm:text-xl tracking-tighter mt-8 underline underline-offset-1 hover:underline-offset-8 transition-all">
+          <Link href="https://docs.google.com/presentation/d/1wbahAoUOV55_dKjk6TZRa59FtsPvzYg2XZF4sYkHZFk/edit?usp=sharing" target="_blank" className="sm:text-xl tracking-tighter mt-8 underline underline-offset-1 hover:underline-offset-8 transition-all">
             SEE DOCUMENTATION
-          </button>
+          </Link>
         </div>
         <div className="col-span-2 h-min flex flex-wrap items-center justify-center sm:justify-normal gap-4 sm:gap-8 border-y-2 border-black py-4 lg:py-8 xl:py-16 px-4">
           <Card
